@@ -57,6 +57,17 @@ class Stringable implements JsonSerializable, ArrayAccess, BaseStringable
     }
 
     /**
+     * Returns the given value with the appropriate indefinite article prepended.
+     *
+     * @param  string  $word
+     * @return string 
+     */
+    public function withArticle()
+    {
+        return new static(Str::withArticle($this->value));
+    }
+
+    /**
      * Append the given values to the string.
      *
      * @param  array|string  ...$values
@@ -64,7 +75,7 @@ class Stringable implements JsonSerializable, ArrayAccess, BaseStringable
      */
     public function append(...$values)
     {
-        return new static($this->value.implode('', $values));
+        return new static($this->value . implode('', $values));
     }
 
     /**
@@ -290,7 +301,7 @@ class Stringable implements JsonSerializable, ArrayAccess, BaseStringable
 
         $segments = preg_split($pattern, $this->value, $limit, $flags);
 
-        return ! empty($segments) ? collect($segments) : collect();
+        return !empty($segments) ? collect($segments) : collect();
     }
 
     /**
@@ -382,7 +393,7 @@ class Stringable implements JsonSerializable, ArrayAccess, BaseStringable
      */
     public function isNotEmpty()
     {
-        return ! $this->isEmpty();
+        return !$this->isEmpty();
     }
 
     /**
@@ -619,7 +630,7 @@ class Stringable implements JsonSerializable, ArrayAccess, BaseStringable
      */
     public function prepend(...$values)
     {
-        return new static(implode('', $values).$this->value);
+        return new static(implode('', $values) . $this->value);
     }
 
     /**
@@ -1109,7 +1120,7 @@ class Stringable implements JsonSerializable, ArrayAccess, BaseStringable
      */
     public function whenNotExactly($value, $callback, $default = null)
     {
-        return $this->when(! $this->exactly($value), $callback, $default);
+        return $this->when(!$this->exactly($value), $callback, $default);
     }
 
     /**

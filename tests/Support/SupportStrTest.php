@@ -118,7 +118,7 @@ class SupportStrTest extends TestCase
 
     public function testStringWithoutWordsDoesntProduceError(): void
     {
-        $nbsp = chr(0xC2).chr(0xA0);
+        $nbsp = chr(0xC2) . chr(0xA0);
         $this->assertSame(' ', Str::words(' '));
         $this->assertEquals($nbsp, Str::words($nbsp));
         $this->assertSame('   ', Str::words('   '));
@@ -224,9 +224,12 @@ class SupportStrTest extends TestCase
         $this->assertSame('[...]is a beautiful morn[...]', Str::excerpt('This is a beautiful morning', 'beautiful', ['omission' => '[...]', 'radius' => 5]));
         $this->assertSame(
             'This is the ultimate supercalifragilisticexpialidocious very looooooooooooooooooong looooooooooooong beautiful morning with amazing sunshine and awesome tempera[...]',
-            Str::excerpt('This is the ultimate supercalifragilisticexpialidocious very looooooooooooooooooong looooooooooooong beautiful morning with amazing sunshine and awesome temperatures. So what are you gonna do about it?', 'very',
+            Str::excerpt(
+                'This is the ultimate supercalifragilisticexpialidocious very looooooooooooooooooong looooooooooooong beautiful morning with amazing sunshine and awesome temperatures. So what are you gonna do about it?',
+                'very',
                 ['omission' => '[...]'],
-            ));
+            )
+        );
 
         $this->assertSame('...y...', Str::excerpt('taylor', 'y', ['radius' => 0]));
         $this->assertSame('...ayl...', Str::excerpt('taylor', 'Y', ['radius' => 1]));
@@ -340,6 +343,42 @@ class SupportStrTest extends TestCase
         $this->assertSame('te', Str::afterLast('yv0et0te', 0));
         $this->assertSame('te', Str::afterLast('yv2et2te', 2));
         $this->assertSame('foo', Str::afterLast('----foo', '---'));
+    }
+
+    public function testWithArticle()
+    {
+        // Simple
+        $this->assertSame("an apple", Str::withArticle('apple'));
+        $this->assertSame("a banana", Str::withArticle('banana'));
+        $this->assertSame("an elephant", Str::withArticle('elephant'));
+        $this->assertSame("a car", Str::withArticle('car'));
+        $this->assertSame("an umbrella", Str::withArticle('umbrella'));
+
+        // A
+        $this->assertSame("a cat", Str::withArticle('cat'));
+        $this->assertSame("a dog", Str::withArticle('dog'));
+        $this->assertSame("a purple onion", Str::withArticle('purple onion'));
+        $this->assertSame("a buffalo", Str::withArticle('buffalo'));
+        $this->assertSame("a big apple", Str::withArticle('big apple'));
+
+        // An
+        $this->assertSame("an apricot", Str::withArticle('apricot'));
+        $this->assertSame("an egg", Str::withArticle('egg'));
+        $this->assertSame("an Indian", Str::withArticle('Indian'));
+        $this->assertSame("an orbit", Str::withArticle('orbit'));
+        $this->assertSame("an uprising", Str::withArticle('uprising'));
+
+        // 'h' sound
+        $this->assertSame("an honorable person", Str::withArticle('honorable person'));
+        $this->assertSame("an honest error", Str::withArticle('honest error'));
+
+        // 'u' makes 'y' sound, or 'o' makes 'w' sound
+        $this->assertSame("a union", Str::withArticle('union'));
+        $this->assertSame("a united front", Str::withArticle('united front'));
+        $this->assertSame("a unicorn", Str::withArticle('unicorn'));
+        $this->assertSame("a used napkin", Str::withArticle('used napkin'));
+        $this->assertSame("a U.S. ship", Str::withArticle('U.S. ship'));
+        $this->assertSame("a one-legged man", Str::withArticle('one-legged man'));
     }
 
     #[DataProvider('strContainsProvider')]
@@ -626,7 +665,7 @@ class SupportStrTest extends TestCase
 
     public function testRandomStringFactoryCanBeSet()
     {
-        Str::createRandomStringsUsing(fn ($length) => 'length:'.$length);
+        Str::createRandomStringsUsing(fn ($length) => 'length:' . $length);
 
         $this->assertSame('length:7', Str::random(7));
         $this->assertSame('length:7', Str::random(7));
@@ -1163,7 +1202,7 @@ class SupportStrTest extends TestCase
         return [
             ['not a valid uuid so we can test this'],
             ['zf6f8cb0-c57d-11e1-9b21-0800200c9a66'],
-            ['145a1e72-d11d-11e8-a8d5-f2801f1b9fd1'.PHP_EOL],
+            ['145a1e72-d11d-11e8-a8d5-f2801f1b9fd1' . PHP_EOL],
             ['145a1e72-d11d-11e8-a8d5-f2801f1b9fd1 '],
             [' 145a1e72-d11d-11e8-a8d5-f2801f1b9fd1'],
             ['145a1e72-d11d-11e8-a8d5-f2z01f1b9fd1'],
